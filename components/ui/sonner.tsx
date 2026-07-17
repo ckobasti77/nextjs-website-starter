@@ -1,9 +1,20 @@
 "use client";
 
 import { Toaster as Sonner, type ToasterProps } from "sonner";
+import { useTheme } from "@/components/theme-provider";
 
 function Toaster(props: ToasterProps) {
-  return <Sonner position="bottom-right" richColors closeButton {...props} />;
+  const { mounted, resolvedTheme } = useTheme();
+  return (
+    <Sonner
+      position="bottom-right"
+      theme={mounted ? resolvedTheme : "system"}
+      containerAriaLabel="Obaveštenja"
+      richColors
+      closeButton
+      {...props}
+    />
+  );
 }
 
 export { Toaster };

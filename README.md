@@ -1,60 +1,68 @@
-# Next.js Vibe Coding Starter
+# Notion Clone
 
-Čist početak za ljude koji žele da naprave moderan website razgovorom sa
-Codexom, Claudeom, Cursorom ili drugim coding agentom — bez ručnog
-podešavanja projekta.
+Privatni operativni prostor za mali tim koji vodi više startupa. Aplikacija spaja hijerarhijske beleške, zadatke, odgovornosti i aktivnost tima u jedan miran, pregledan interfejs.
 
-## Početak za dva minuta
+## Šta je uključeno
+
+- startup članstva i privatne pozivnice vezane za email;
+- jedan glavni admin, članovi tima i profilne slike;
+- oblasti Dev, Marketing, Sales i Ostalo za svaki startup;
+- neograničeno ugnježdene stranice i task stranice;
+- rich-text editor sa autosave-om i zaštitom od konflikta pri paralelnom radu;
+- status, prioritet, rok i odgovorna osoba za svaki zadatak;
+- Početna, Danas, Moji zadaci, Kanban, pretraga i aktivnost;
+- responsive web interfejs za desktop i telefon;
+- svetla i tamna tema, Framer Motion mikrointerakcije i pažljivo ograničen GSAP ulaz prikaza.
+
+Codex planiranje i obaveštenja su namerno ostavljeni za drugu fazu, nakon što tim potvrdi svakodnevni workflow jezgra aplikacije.
+
+## Lokalno pokretanje
 
 Potreban je Node.js 20.9 ili noviji.
 
 ```bash
-git clone <URL-tvog-repozitorijuma>
-cd nextjs-website-starter
 npm ci
+```
+
+Pokreni dva terminala:
+
+```bash
+# Terminal 1
+npm run dev:convex
+
+# Terminal 2
 npm run dev
 ```
 
-Otvori `http://localhost:3000`, zatim otvori isti folder u svom coding agentu.
-Pre prve izmene reci agentu da pročita `AGENTS.md`.
+Otvori [http://localhost:3100](http://localhost:3100). Notion Clone namerno koristi svoj port kako ne bi nasledio service worker i sačuvane rute drugih lokalnih aplikacija na portu 3000. `npm run dev` koristi podrazumevani Turbopack iz Next.js 16, ograničava Node heap i automatski gasi samo svoj procesni lanac ako slobodna sistemska memorija duže ostane ispod bezbednog praga. Za dijagnostički Webpack fallback postoji `npm run dev:webpack`.
 
-## Prompt koji možeš odmah da nalepiš
+`npm run dev:convex` odbija drugi paralelni Convex watcher i ne ponavlja skupi TypeScript check pri svakoj filesystem promeni; kompletan TypeScript check ostaje deo `npm run check`.
 
-```text
-Read AGENTS.md first. Build a polished, responsive website for [opiši biznis,
-publiku i cilj]. The key sections are [sekcije]. The visual direction is
-[stil, reference ili boje]. Use real Serbian copy, accessible interactions,
-and verify the result in the browser. Run npm run check before you finish.
+Nemoj dodatno pokretati `npx convex dev` dok `npm run dev:convex` već radi.
+Nemoj ni preusmeravati Convex izlaz u `.log` fajl unutar ovog foldera, jer promena tog fajla može ponovo aktivirati watcher; za logove koristi sistemski temp folder.
+
+Aktuelno lokalno Convex okruženje je već povezano kroz `.env.local`. Za potpuno nov Convex deployment prvo pokreni:
+
+```bash
+npx convex dev --once
+npx @convex-dev/auth --web-server-url http://localhost:3100
+npx convex env set BOOTSTRAP_ADMIN_CODE "izaberi-dug-slucajan-kod"
 ```
 
-Ne moraš znati imena komponenti ni fajlova. Opiši šta posetilac treba da vidi
-i uradi; agent će izabrati odgovarajuću strukturu, UI i animacije.
+`BOOTSTRAP_ADMIN_CODE` se unosi samo pri kreiranju prvog administratorskog naloga. Posle toga registracija radi isključivo preko pozivnog linka koji admin pravi unutar aplikacije. Tajne se podešavaju kao Convex environment variables i ne upisuju se u git.
 
-## Provera pre GitHub-a
+## Provera
 
 ```bash
 npm run check
 ```
 
-Ova komanda pokreće lint i production build. Ista provera se automatski pokreće
-na svakom GitHub push-u i pull request-u.
+Komanda pokreće ESLint i production build. Convex funkcije i schema se proveravaju i objavljuju na dev deployment komandom:
 
-## Objavljivanje na Vercel
+```bash
+npm run convex:push
+```
 
-1. Napravi GitHub repozitorijum i pushuj ovaj folder.
-2. Uloguj se na [Vercel](https://vercel.com/new) i izaberi **Add New → Project**.
-3. Importuj GitHub repozitorijum i klikni **Deploy**. Vercel automatski prepoznaje Next.js.
+## Tehnologije
 
-Kada kasnije agent doda environment varijable, unesi iste vrednosti i u Vercel
-Project Settings → Environment Variables. Nikada ne pushuj `.env.local`.
-
-## Šta je već spremno
-
-- Next.js 16, React 19, TypeScript i Tailwind CSS 4
-- shadcn/ui osnova sa Radix pristupačnim komponentama
-- GSAP, Framer Motion i Lucide ikonice
-- neutralni dizajn tokeni i potpuno prazna početna ruta
-- jasna pravila za UI/UX i bezbedan rad agenata u `AGENTS.md`
-
-Convex, autentikacija, baza, CMS, analitika i test framework se dodaju samo kada
-za konkretan website stvarno budu potrebni.
+Next.js 16 App Router, React 19, TypeScript, Tailwind CSS 4, shadcn/Radix, Convex + Convex Auth, Tiptap, Framer Motion i GSAP.
